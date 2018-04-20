@@ -47,13 +47,11 @@ function record(event) {
         console.log("Final: ", event.results[i][0].transcript);
         const client = new Client();
         client.getSentiment(event.results[i][0].transcript)
-        .then((sentiments) => {
-            sentiments.json()
-            .then(sentiments => {
-                for (i in sentiments) {
-                    console.log(sentiments[i]);
-                    addSentiment(sentiments[i]);
-                }
+        .then((sentiment) => {
+            sentiment.json()
+            .then(sentiment => {
+                console.log(sentiment);
+                addSentiment(sentiment);
             })
             
         } );
