@@ -4,14 +4,15 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "./node_modules/.bin/ws"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "serve": "^6.5.5"
+
   },
   "devDependencies": {
-    "ts-loader": "^4.2.0"
+    "local-web-server": "^2.5.1"
   }
 }

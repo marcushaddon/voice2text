@@ -82,12 +82,14 @@ function record(event) {
         } );
 
       } else {
+          
           if (!recording) {
+            // This is the beginning of a recording
             const client = new Client();
             client.registerEvent('Recording/start')
             .then((res) => console.log("Registerd beginning of recording"));
             recording = true;
-          }
+          } // else we are already recording
           
           console.log("Interim: ", event.results[i][0].transcript);
       }
