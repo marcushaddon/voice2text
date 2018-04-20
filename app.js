@@ -22,11 +22,28 @@ class Client {
             }
         );
     }
+
+    registerEvent(event) {
+        let endpoint = this._sentimentApiBaseUrl + event;
+
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+
+        return fetch(
+            endpoint,
+            {
+                method: 'post',
+                headers: headers
+            }
+        );
+    }
 }
 
 var mic;
 var unit;
 var recognition;
+var recording = false;
 
 function setup() {
     recognition = new window['webkitSpeechRecognition']();
@@ -43,9 +60,17 @@ function setup() {
 function record(event) {
     for (var i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
+
         // This is our final result
         console.log("Final: ", event.results[i][0].transcript);
         const client = new Client();
+
+        // Register end of recording
+        recording = false;
+        client.registerEvent('Recording/end')
+        .then((res) => console.log('Registered end of recording'));
+
+        // Get the sentiment
         client.getSentiment(event.results[i][0].transcript)
         .then((sentiment) => {
             sentiment.json()
@@ -57,6 +82,13 @@ function record(event) {
         } );
 
       } else {
+          if (!recording) {
+            const client = new Client();
+            client.registerEvent('Recording/start')
+            .then((res) => console.log("Registerd beginning of recording"));
+            recording = true;
+          }
+          
           console.log("Interim: ", event.results[i][0].transcript);
       }
     }
