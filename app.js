@@ -64,22 +64,26 @@ function record(event) {
         // This is our final result
         console.log("Final: ", event.results[i][0].transcript);
         const client = new Client();
+        const result = event.results[i][0];
 
         // Register end of recording
         recording = false;
         client.registerEvent('Recording/end')
-        .then((res) => console.log('Registered end of recording'));
+        .then((res) => {
+            console.log('Registered end of recording');
+            // Get the sentiment
+            client.getSentiment(result.transcript)
+            .then((sentiment) => {
+                sentiment.json()
+                .then(sentiment => {
+                    console.log(sentiment);
+                    addSentiment(sentiment);
+                });
+                
+            } );
+        });
 
-        // Get the sentiment
-        client.getSentiment(event.results[i][0].transcript)
-        .then((sentiment) => {
-            sentiment.json()
-            .then(sentiment => {
-                console.log(sentiment);
-                addSentiment(sentiment);
-            })
-            
-        } );
+        
 
       } else {
           
