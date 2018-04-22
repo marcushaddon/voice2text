@@ -55,6 +55,28 @@ function setup() {
     recognition.onerror = function(event) { console.log("There was an error!", event); }
     recognition.onend = function() { console.log("Stopped recording!"); beginRecording(); }
     beginRecording();
+
+    setTimeout(refresh, 60000);
+}
+
+function refresh() {
+    if (recording) {
+        client.registerEvent('Recording/end')
+        .then(() => {
+            console.log("Cutting it off...");
+            let client = new Client();
+            client.getSentiment('')
+            .then(
+                () => {
+                    location.reload(true);
+                    setTimeout(refresh, 60000);
+                }
+            )
+        })
+    } else {
+        location.reload(true);
+        setTimeout(refresh, 60000);
+    }
 }
 
 function record(event) {
@@ -102,6 +124,10 @@ function record(event) {
 
 function beginRecording() {
     recognition.start();
+}
+
+function stopRecording() {
+    recognition.stop();
 }
 
 function addSentiment(sentiment) {
